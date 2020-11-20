@@ -2,13 +2,12 @@
 
 namespace StateMachineRsch
 {
-	
-	class Program
+	public static class Program
 	{
-		static void Main(string[] args)
+		public static void Main()
 		{
-			Console.WriteLine("Hello World!");
-			Entity[] arr = new[]
+			Console.WriteLine("Start.");
+			var arr = new []
 			{
 				new Entity { },
 				new Entity {FilePath = "ABC"},
@@ -18,10 +17,10 @@ namespace StateMachineRsch
 
 			DoForEcFileReq(arr);
 			DoForEcAllReq(arr);
-
-
-
-			//Console.WriteLine(pr);
+			
+			Console.WriteLine();
+			Console.WriteLine("All completed.");
+			
 		}
 
 		private static void DoForEcAllReq(Entity[] arr)
@@ -35,6 +34,7 @@ namespace StateMachineRsch
 				var sm = new EcProcessorAllRequired(entity);
 				sm.Execute();
 			}
+			Console.WriteLine();
 			Console.WriteLine("Complete AllReq");
 		}
 
