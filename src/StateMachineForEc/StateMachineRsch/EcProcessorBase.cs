@@ -20,19 +20,14 @@ namespace StateMachineRsch
 				.Permit(Trigger.OnComplete, State.Complete);
 
 			_stM.Configure(State.InProcess)
-				.OnEntry(() => StartProcessing())
+				.OnEntry(() => ExecuteProcessing())
 				.Permit(Trigger.OnComplete, State.Complete);
 
 			_stM.Configure(State.Complete)
 				.OnEntry(() => OnComplete());
 		}
 
-		private void OnComplete()
-		{
-			Console.WriteLine($"Complete in {this.GetType().Name}");
-		}
-
-
+		
 		public void Execute()
 		{
 			while (_stM.State != State.Complete)
@@ -65,7 +60,13 @@ namespace StateMachineRsch
 		protected abstract void CheckState();
 		
 
-		protected abstract void StartProcessing();
+		protected abstract void ExecuteProcessing();
+		
+		
+		private void OnComplete()
+		{
+			Console.WriteLine($"Complete in {this.GetType().Name}");
+		}
 		
 
 		private enum State

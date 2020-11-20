@@ -15,7 +15,7 @@ namespace StateMachineRsch
 				: Trigger.OnComplete;
 		}
 
-		protected override void StartProcessing()
+		protected override void ExecuteProcessing()
 		{
 			Console.WriteLine("AllRequired: in processing.");
 			NextTrigger = Trigger.OnComplete;

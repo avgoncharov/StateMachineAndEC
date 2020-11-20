@@ -15,7 +15,7 @@ namespace StateMachineRsch
 				: Trigger.OnComplete;
 		}
 
-		protected override void StartProcessing()
+		protected override void ExecuteProcessing()
 		{
 			Console.WriteLine("FileOnlyRequired: in processing.");
 			NextTrigger = Trigger.OnComplete;
