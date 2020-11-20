@@ -54,7 +54,7 @@ namespace StateMachineRsch
 		protected Trigger NextTrigger { get; set; }
 
 
-		protected Entity Entity { get; set; }
+		protected Entity Entity { get; }
 
 
 		protected abstract void CheckState();
