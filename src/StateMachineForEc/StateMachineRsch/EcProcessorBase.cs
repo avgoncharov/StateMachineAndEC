@@ -43,15 +43,7 @@ namespace StateMachineRsch
 			return UmlDotGraph.Format(_stM.GetInfo());
 		}
 
-
-		protected enum Trigger
-		{
-			OnCheckState,
-			OnProcess,
-			OnComplete
-		}
-
-
+		
 		protected abstract bool CheckState(Entity entity);
 		
 
@@ -91,6 +83,14 @@ namespace StateMachineRsch
 			ChekState,
 			InProcess,
 			Complete
+		}
+		
+		
+		private enum Trigger
+		{
+			OnCheckState,
+			OnProcess,
+			OnComplete
 		}
 		
 		private readonly StateMachine<State, Trigger> _stM;
