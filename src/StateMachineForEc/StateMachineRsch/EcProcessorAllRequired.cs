@@ -4,21 +4,14 @@ namespace StateMachineRsch
 {
 	public class EcProcessorAllRequired:EcProcessorBase
 	{
-		public EcProcessorAllRequired(Entity entity) : base(entity)
+		protected override bool CheckState(Entity entity)
 		{
+			return string.IsNullOrEmpty(entity.FilePath) != true && entity.UserId.HasValue;
 		}
 
-		protected override void CheckState()
+		protected override void ExecuteProcessing(Entity entity)
 		{
-			NextTrigger = (string.IsNullOrEmpty(Entity.FilePath) != true && Entity.UserId.HasValue) 
-				? Trigger.OnProcess 
-				: Trigger.OnComplete;
-		}
-
-		protected override void ExecuteProcessing()
-		{
-			Console.WriteLine("AllRequired: in processing.");
-			NextTrigger = Trigger.OnComplete;
+			Console.WriteLine($"AllRequired: in processing. | {{{{{entity}}}}}");
 		}
 	}
 }

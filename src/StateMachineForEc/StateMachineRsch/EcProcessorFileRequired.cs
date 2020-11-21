@@ -4,21 +4,14 @@ namespace StateMachineRsch
 {
 	public class EcProcessorFileRequired:EcProcessorBase
 	{
-		public EcProcessorFileRequired(Entity entity) : base(entity)
+		protected override bool CheckState(Entity entity)
 		{
+			return string.IsNullOrEmpty(entity.FilePath) != true;
 		}
 
-		protected override void CheckState()
+		protected override void ExecuteProcessing(Entity entity)
 		{
-			NextTrigger = string.IsNullOrEmpty(Entity.FilePath) != true 
-				? Trigger.OnProcess 
-				: Trigger.OnComplete;
-		}
-
-		protected override void ExecuteProcessing()
-		{
-			Console.WriteLine("FileOnlyRequired: in processing.");
-			NextTrigger = Trigger.OnComplete;
+			Console.WriteLine($"FileOnlyRequired: in processing. | {{{entity}}}");
 		}
 	}
 }

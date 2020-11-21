@@ -25,14 +25,16 @@ namespace StateMachineRsch
 
 		private static void DoForEcAllReq(Entity[] arr)
 		{
-			Console.WriteLine("Start AllReq");
+			var controller = new Controller(new EcProcessorAllRequired());
+			Console.WriteLine("\n\tStart AllReq");
 			foreach (var entity in arr)
 			{
 				Console.WriteLine("------------------------");
 				Console.WriteLine($"Entity: {{{entity}}}");
 				
-				var sm = new EcProcessorAllRequired(entity);
-				sm.Execute();
+				controller.Entity = entity;
+				
+				controller.HandleMessage(string.Empty);
 			}
 			Console.WriteLine();
 			Console.WriteLine("Complete AllReq");
@@ -40,14 +42,15 @@ namespace StateMachineRsch
 
 		private static void DoForEcFileReq(Entity[] arr)
 		{
-			Console.WriteLine("Start FileReq");
+			var controller = new Controller(new EcProcessorFileRequired());
+			Console.WriteLine("\n\tStart FileReq");
 			foreach (var entity in arr)
 			{
 				Console.WriteLine("------------------------");
 				Console.WriteLine($"Entity: {{{entity}}}");
+				controller.Entity = entity;
 				
-				var sm = new EcProcessorFileRequired(entity);
-				sm.Execute();
+				controller.HandleMessage(string.Empty);
 			}
 			Console.WriteLine("Complete FileReq");
 		}

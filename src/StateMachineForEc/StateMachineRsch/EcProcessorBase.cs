@@ -4,23 +4,23 @@ using Stateless.Graph;
 
 namespace StateMachineRsch
 {
-	public abstract class EcProcessorBase
+	public abstract class EcProcessorBase: IEcProcessor
 	{
-		protected EcProcessorBase(Entity entity)
+		protected EcProcessorBase()
 		{
-			Entity = entity;
-			NextTrigger = Trigger.OnCheckState;
-
+			_state = State.Init;
+			_stM = new StateMachine<State, Trigger>(()=>_state, s=>_state = s);
+			
 			_stM.Configure(State.Init)
 				.Permit(Trigger.OnCheckState, State.ChekState);
 
 			_stM.Configure(State.ChekState)
-				.OnEntry(() => CheckState())
+				.OnEntry(() => InnerCheckState())
 				.Permit(Trigger.OnProcess, State.InProcess)
 				.Permit(Trigger.OnComplete, State.Complete);
 
 			_stM.Configure(State.InProcess)
-				.OnEntry(() => ExecuteProcessing())
+				.OnEntry(() => InnerExecuteProcessing())
 				.Permit(Trigger.OnComplete, State.Complete);
 
 			_stM.Configure(State.Complete)
@@ -28,15 +28,16 @@ namespace StateMachineRsch
 		}
 
 		
-		public void Execute()
+		public void Process(Entity entity)
 		{
+			Reset(entity);
+
 			while (_stM.State != State.Complete)
 			{
-				_stM.Fire(NextTrigger);
+				_stM.Fire(_nextTrigger);
 			}
 		}
-		
-		
+
 		public override string ToString()
 		{
 			return UmlDotGraph.Format(_stM.GetInfo());
@@ -51,21 +52,36 @@ namespace StateMachineRsch
 		}
 
 
-		protected Trigger NextTrigger { get; set; }
-
-
-		protected Entity Entity { get; }
-
-
-		protected abstract void CheckState();
+		protected abstract bool CheckState(Entity entity);
 		
 
-		protected abstract void ExecuteProcessing();
-		
-		
+		protected abstract void ExecuteProcessing(Entity entity);
+
+
+		private void InnerCheckState()
+		{
+			_nextTrigger = CheckState(_entity) ? Trigger.OnProcess : Trigger.OnComplete;
+		}
+
+
+		private void InnerExecuteProcessing()
+		{
+			ExecuteProcessing(_entity);
+			_nextTrigger = Trigger.OnComplete;
+		}
+
+
 		private void OnComplete()
 		{
 			Console.WriteLine($"Complete in {this.GetType().Name}");
+		}
+		
+		
+		private void Reset(Entity entity)
+		{
+			_entity = entity;
+			_state = State.Init;
+			_nextTrigger = Trigger.OnCheckState;
 		}
 		
 
@@ -76,6 +92,10 @@ namespace StateMachineRsch
 			InProcess,
 			Complete
 		}
-		private readonly StateMachine<State, Trigger> _stM = new StateMachine<State, Trigger>(State.Init);
+		
+		private readonly StateMachine<State, Trigger> _stM;
+		private Entity _entity;
+		private State _state;
+		private Trigger _nextTrigger;
 	}
 }
